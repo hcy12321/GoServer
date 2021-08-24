@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package pb;
+option go_package ="main/pb";
+
+import "base.proto";
+
+message Player {
+    string name = 1;
+    int32 lv = 2;
+    int32 gold = 3;
+}
+
+message TemplateMsg {
+    BaseMessage base = 1;
+}
+
+message LoginReq {
+    BaseMessage base = 1;
+    string account = 2;
+}
+
+message LoginRes {
+    BaseMessage base = 1;
+    Player player = 2;
+}

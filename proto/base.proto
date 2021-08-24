@@ -1,0 +1,16 @@
+syntax="proto3";
+
+package pb;
+option go_package="main/pb";
+
+enum PACKET_CMD {
+    EMPTY = 0;
+    LOGIN = 1;
+    LOGIN_RES = 2;
+    UP_LV = 3;
+    UP_LV_RES = 4;
+}
+
+message BaseMessage {
+    PACKET_CMD cmd = 1;
+}
