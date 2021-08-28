@@ -1,6 +1,13 @@
 package lib
 
-import "unsafe"
+import (
+	"main/proto/main/pb"
+	"unsafe"
+)
+
+type ProtoBaseInterface interface {
+	GetBase() *(pb.BaseMessage)
+}
 
 type DataConvertInterface interface {
 	Decode([]byte) interface{}

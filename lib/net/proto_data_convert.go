@@ -43,21 +43,30 @@ func (convert *ProtoDataConvert) Decode(b []byte) (msg interface{}) {
 }
 
 func (convert *ProtoDataConvert) Encode(data interface{}) (b []byte) {
-	v := reflect.ValueOf(data)
-	base := reflect.Indirect(v).FieldByName("Base")
-	if !base.IsValid() {
-		return
-	}
-	cmd := reflect.Indirect(base).FieldByName("Cmd")
-	if !cmd.IsValid() {
-		return
-	}
-	if cmd.Type().Kind() != reflect.Int32 {
-		return
-	}
+	// v := reflect.ValueOf(data)
+	// base := reflect.Indirect(v).FieldByName("Base")
+	// if !base.IsValid() {
+	// 	return
+	// }
+	// cmd := reflect.Indirect(base).FieldByName("Cmd")
+	// if !cmd.IsValid() {
+	// 	return
+	// }
+	// if cmd.Type().Kind() != reflect.Int32 {
+	// 	return
+	// }
 
+	msg, ok := data.(ProtoBaseInterface)
+	if !ok {
+		return
+	}
+	base := msg.GetBase()
+	if base == nil {
+		return
+	}
+	cmd := base.Cmd
 	h := make([]byte, 4)
-	msgId := uint32(cmd.Int())
+	msgId := uint32(cmd)
 	binary.LittleEndian.PutUint32(h, msgId)
 
 	t, err := proto.Marshal(data.(proto.Message))

@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/binary"
 	"net"
-	"reflect"
 )
 
 type CommonConn struct {
@@ -38,19 +37,29 @@ func (c *CommonConn) Read() {
 	go func() {
 		for scanner.Scan() {
 			msg := c.convert.Decode(scanner.Bytes())
-			v := reflect.ValueOf(msg)
-			base := reflect.Indirect(v).FieldByName("Base")
-			if !base.IsValid() {
+			// v := reflect.ValueOf(msg)
+			// base := reflect.Indirect(v).FieldByName("Base")
+			// if !base.IsValid() {
+			// 	return
+			// }
+			// cmd := reflect.Indirect(base).FieldByName("Cmd")
+			// if !cmd.IsValid() {
+			// 	return
+			// }
+			// if cmd.Type().Kind() != reflect.Int32 {
+			// 	return
+			// }
+			packet, ok := msg.(ProtoBaseInterface)
+			if !ok {
 				return
 			}
-			cmd := reflect.Indirect(base).FieldByName("Cmd")
-			if !cmd.IsValid() {
+
+			base := packet.GetBase()
+			if base == nil {
 				return
 			}
-			if cmd.Type().Kind() != reflect.Int32 {
-				return
-			}
-			msgId := int32(cmd.Int())
+			cmd := base.Cmd
+			msgId := int32(cmd)
 			res := c.router.Process(msgId, msg, c.conn)
 			if res != nil {
 				c.Send(res)
