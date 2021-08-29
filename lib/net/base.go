@@ -9,6 +9,11 @@ type ProtoBaseInterface interface {
 	GetBase() *(pb.BaseMessage)
 }
 
+type EntityBase interface {
+	load(interface{}) bool
+	save()
+}
+
 type DataConvertInterface interface {
 	Decode([]byte) interface{}
 	Encode(interface{}) []byte

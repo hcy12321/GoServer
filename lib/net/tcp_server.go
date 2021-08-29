@@ -25,7 +25,7 @@ func NewTcpServer(host, port string, router *Router, converter DataConvertInterf
 
 func (srv *TcpServer) Start() {
 	ln, _ := net.Listen("tcp", srv.host+":"+srv.port)
-	fmt.Println("tcp listen on ", srv.host, ":", srv.port)
+	fmt.Printf("tcp listen on %s:%s", srv.host, srv.port)
 
 	go func() {
 		for {

@@ -11,9 +11,9 @@ func main() {
 	router := lib.CreateRouter()
 	router.RegisterHandler(int32(pb.PACKET_CMD_LOGIN), logic.Login)
 	httpSrv.SetRouter(router)
-	go func() {
-		httpSrv.Create("127.0.0.1:8001")
-	}()
+	// go func() {
+	// 	httpSrv.Create("127.0.0.1:8001")
+	// }()
 	convert := lib.NewProtoDataConvert()
 	convert.RegisterProto(int32(pb.PACKET_CMD_LOGIN), &pb.LoginReq{})
 	tcpSrv := lib.NewTcpServer("127.0.0.1", "8101", router, convert)
