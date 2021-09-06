@@ -3,24 +3,25 @@ package lib
 import (
 	"encoding/binary"
 	"log"
-	"reflect"
+	"main/proto/main/pb"
 
 	"google.golang.org/protobuf/proto"
 )
 
+type CreateMessage func() interface{}
+
 type ProtoDataConvert struct {
-	protoMap map[int32]reflect.Type
+	protoMap map[pb.PACKET_CMD]CreateMessage
 }
 
 func NewProtoDataConvert() *ProtoDataConvert {
 	convert := &ProtoDataConvert{}
-	convert.protoMap = make(map[int32]reflect.Type)
+	convert.protoMap = make(map[pb.PACKET_CMD]CreateMessage)
 	return convert
 }
 
-func (cdc *ProtoDataConvert) RegisterProto(msgId int32, msg interface{}) {
-	msgType := reflect.TypeOf(msg.(proto.Message))
-	cdc.protoMap[msgId] = msgType
+func (cdc *ProtoDataConvert) RegisterProto(msgId pb.PACKET_CMD, f CreateMessage) {
+	cdc.protoMap[msgId] = f
 }
 
 func (convert *ProtoDataConvert) Decode(b []byte) (msg interface{}) {
@@ -29,8 +30,8 @@ func (convert *ProtoDataConvert) Decode(b []byte) (msg interface{}) {
 	}
 
 	msgId := binary.LittleEndian.Uint32(b[:4])
-	if msgType, ok := convert.protoMap[int32(msgId)]; ok {
-		msg = reflect.New(msgType.Elem()).Interface()
+	if f, ok := convert.protoMap[pb.PACKET_CMD(msgId)]; ok {
+		msg = f()
 		err := proto.Unmarshal(b[4:], msg.(proto.Message))
 		if err != nil {
 			log.Fatal(err)

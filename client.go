@@ -1,4 +1,4 @@
-// package main
+package main
 
 // import (
 // 	"fmt"
@@ -14,7 +14,7 @@
 // 		return nil
 // 	})
 // 	convert := lib.NewProtoDataConvert()
-// 	convert.RegisterProto(int32(pb.PACKET_CMD_LOGIN_RES), &pb.LoginRes{})
+// 	convert.RegisterProto(pb.PACKET_CMD_LOGIN_RES, func() interface{} { return &pb.LoginRes{} })
 // 	client := lib.NewTcpClient("127.0.0.1", "8101", router, convert)
 // 	client.Start()
 // 	req := &pb.LoginReq{Base: &pb.BaseMessage{}}

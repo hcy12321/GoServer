@@ -15,7 +15,7 @@ func main() {
 	// 	httpSrv.Create("127.0.0.1:8001")
 	// }()
 	convert := lib.NewProtoDataConvert()
-	convert.RegisterProto(int32(pb.PACKET_CMD_LOGIN), &pb.LoginReq{})
+	convert.RegisterProto(pb.PACKET_CMD_LOGIN, func() interface{} { return &pb.LoginReq{} })
 	tcpSrv := lib.NewTcpServer("127.0.0.1", "8101", router, convert)
 	tcpSrv.Start()
 
